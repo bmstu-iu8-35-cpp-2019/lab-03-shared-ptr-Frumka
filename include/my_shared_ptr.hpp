@@ -6,6 +6,7 @@
 #include <atomic>
 #include <utility>
 #include <stdexcept>
+#include <algorithm>
 
 class link_control {
 private:
@@ -160,15 +161,13 @@ public:
     }
 
     void swap(SharedPtr &r) {
-        if (_data == r._data) return;
-        auto temp = _data;
-        _data = r._data;
-        r._data = temp;
-        return;
+        std::swap(_data, r._data);
     }
 
     size_t use_count() const {
-        if (!*this) return 0;
+        if (!*this)
+            return 0;
+
         return static_cast<size_t>(_control->get());
     }
 };
